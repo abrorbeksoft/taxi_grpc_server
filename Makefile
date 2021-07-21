@@ -1,7 +1,7 @@
 CURRENT_DIR=$(shell pwd)
 
-run:
-	echo "Hello Abrorbek"
+start:
+	 go run cmd/main.go
 
 compile:
 		./scripts/proto-gen.sh ${CURRENT_DIR}

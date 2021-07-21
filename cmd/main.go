@@ -1,16 +1,38 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"github.com/abrorbeksoft/taxi_grpc_server/genproto/user_service"
 	"google.golang.org/grpc"
+	"log"
+	"net"
 )
 
-func main() {
-	//lis,error:=net.Listen("tcp",":9000")
-	//if error !=nil {
-	//	log.Fatalf("error occured: %v",error)
-	//}
-	grpc.Dial(fmt.Sprintf("%s:%d","192.168.1.166",8001),grpc.WithInsecure())
+type Server struct {
+	
+}
 
-	fmt.Println("Hello world")
+func (s Server) Login(ctx context.Context, user *user_service.User) (*user_service.SuccessMessage, error) {
+
+	fmt.Println(user)
+
+	return &user_service.SuccessMessage{
+		Responce: "hello world",
+	},nil
+}
+
+func main() {
+	lis,err:=net.Listen("tcp",":9000")
+	if err!=nil {
+		fmt.Println(err)
+	}
+	s:=Server{}
+	grpcServer:=grpc.NewServer();
+
+	user_service.RegisterRegistrationSystemServer(grpcServer,&s)
+
+	if err:=grpcServer.Serve(lis); err != nil {
+		log.Fatalf("Failed to serve: %s",err)
+	}
 }

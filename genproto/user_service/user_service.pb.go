@@ -7,6 +7,10 @@
 package user_service
 
 import (
+	context "context"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -236,4 +240,84 @@ func file_user_service_user_service_proto_init() {
 	file_user_service_user_service_proto_rawDesc = nil
 	file_user_service_user_service_proto_goTypes = nil
 	file_user_service_user_service_proto_depIdxs = nil
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConnInterface
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion6
+
+// RegistrationSystemClient is the client API for RegistrationSystem service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type RegistrationSystemClient interface {
+	Login(ctx context.Context, in *User, opts ...grpc.CallOption) (*SuccessMessage, error)
+}
+
+type registrationSystemClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewRegistrationSystemClient(cc grpc.ClientConnInterface) RegistrationSystemClient {
+	return &registrationSystemClient{cc}
+}
+
+func (c *registrationSystemClient) Login(ctx context.Context, in *User, opts ...grpc.CallOption) (*SuccessMessage, error) {
+	out := new(SuccessMessage)
+	err := c.cc.Invoke(ctx, "/RegistrationSystem/Login", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// RegistrationSystemServer is the server API for RegistrationSystem service.
+type RegistrationSystemServer interface {
+	Login(context.Context, *User) (*SuccessMessage, error)
+}
+
+// UnimplementedRegistrationSystemServer can be embedded to have forward compatible implementations.
+type UnimplementedRegistrationSystemServer struct {
+}
+
+func (*UnimplementedRegistrationSystemServer) Login(context.Context, *User) (*SuccessMessage, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+
+func RegisterRegistrationSystemServer(s *grpc.Server, srv RegistrationSystemServer) {
+	s.RegisterService(&_RegistrationSystem_serviceDesc, srv)
+}
+
+func _RegistrationSystem_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RegistrationSystemServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/RegistrationSystem/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RegistrationSystemServer).Login(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _RegistrationSystem_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "RegistrationSystem",
+	HandlerType: (*RegistrationSystemServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Login",
+			Handler:    _RegistrationSystem_Login_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "user_service/user_service.proto",
 }
