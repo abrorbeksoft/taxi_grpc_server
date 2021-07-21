@@ -2,6 +2,15 @@ syntax="proto3";
 
 option go_package="genproto/user_service";
 
+service RegistrationSystem {
+  rpc Login(User) returns (SuccessMessage) {}
+}
+
+message SuccessMessage {
+  string responce = 1;
+  int32 status = 2;
+}
+
 message User{
   string name=1;
   string surname=2;
